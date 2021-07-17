@@ -10,6 +10,8 @@ import org.xml.sax.InputSource;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -36,6 +38,17 @@ public class XmlUtils {
         marshaller.marshal(obj, writer);
 
         return writer.toString();
+    }
+
+    public static <T> T fromXml(String xml, Class<T> clazz) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        InputSource inputSource = new InputSource(new StringReader(xml));
+        Document document = builder.parse(inputSource);
+
+        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        return (T) unmarshaller.unmarshal(document);
     }
 
     public static String toJson(String xml) throws Exception {
