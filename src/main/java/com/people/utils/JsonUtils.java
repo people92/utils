@@ -1,9 +1,6 @@
 package com.people.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
@@ -11,6 +8,11 @@ public class JsonUtils {
 
     public static <T> String toJson(T obj) {
         Gson gson = new Gson();
+        return gson.toJson(obj);
+    }
+
+    public static <T> String toJsonWithoutUnicode(T obj) {
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         return gson.toJson(obj);
     }
 
