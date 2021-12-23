@@ -1,8 +1,11 @@
 package com.people.utils;
 
 import com.google.gson.*;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonUtils {
 
@@ -13,6 +16,11 @@ public class JsonUtils {
 
     public static <T> String toJsonWithoutUnicode(T obj) {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        return gson.toJson(obj);
+    }
+
+    public static <T> String toJsonWithNull(T obj) {
+        Gson gson = new GsonBuilder().serializeNulls().create();
         return gson.toJson(obj);
     }
 
@@ -33,5 +41,48 @@ public class JsonUtils {
         }
         return false;
     }
+    public static JsonObject parse(String json) {
+        return new JsonParser().parse(json).getAsJsonObject();
+    }
+    public static List<String> getKeyChain(String key) {
+        String[] splitKey = key.split("[.\\[]");
+        List<String> keys = new ArrayList<>();
+        for(String singleKey : splitKey) {
+            if(singleKey.matches(".*]$")) {
+                keys.add("[" + singleKey);
+            } else {
+                keys.add(singleKey);
+            }
+        }
+        return keys;
+    }
+    public static String getValue(String json, String key) {
+        if(StringUtils.isEmpty(json)) return "";
 
+        return getValue(parse(json), key);
+    }
+
+    public static String getValue(JsonObject jsonObject, String key) {
+        List<String> keyChain = getKeyChain(key);
+
+        JsonElement elem = jsonObject.deepCopy();
+        for(String singleKey : keyChain) {
+            if(singleKey.matches("\\[.*]$")) {
+                int len = singleKey.length();
+                int index = Integer.parseInt(singleKey.substring(1, len -1));
+                elem = elem.getAsJsonArray().get(index);
+            } else {
+                elem = elem.getAsJsonObject().get(singleKey);
+                if(elem == null || elem.isJsonNull()) return "";
+                if(elem.isJsonPrimitive()) return elem.getAsJsonPrimitive().getAsString();
+                if(elem.isJsonArray()) {
+                    elem = elem.getAsJsonArray();
+                } else {
+                    elem = elem.getAsJsonObject();
+                }
+            }
+        }
+        return elem.toString();
+
+    }
 }
