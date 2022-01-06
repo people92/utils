@@ -18,6 +18,13 @@ public class DateUtils {
     }
 
     /*
+    * Date 원하는 포맷으로 변환
+    * */
+    public static String getDateFormat(Date date, String dFormat) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dFormat);
+        return simpleDateFormat.format(Date);
+    }
+    /*
     * 현재 날짜 및 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 반환
     * */
     public static String getNowDateAndTime() {

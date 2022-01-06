@@ -4,8 +4,7 @@ import com.google.gson.*;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class JsonUtils {
 
@@ -85,4 +84,5 @@ public class JsonUtils {
         return elem.toString();
 
     }
+
 }
