@@ -22,7 +22,7 @@ public class DateUtils {
     * */
     public static String getDateFormat(Date date, String dFormat) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dFormat);
-        return simpleDateFormat.format(Date);
+        return simpleDateFormat.format(date);
     }
     /*
     * 현재 날짜 및 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 반환
